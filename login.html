@@ -1,0 +1,148 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Ed Gonzalez - Custom Portal</title>
+    <meta name="description" content="Login Script Using the CMS Login API">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="loginScriptSample.js"></script>
+
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Quicksand);
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            background: url(fullBG.jpg) no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+        
+        body {
+            font-family: "Quicksand", sans-serif;
+            height: 100%;
+            margin: 0;
+            background-color: transparent;
+        }
+        
+        #wrapper {
+            width: 25%;
+            height: 100%;
+            bottom: 0;
+            margin-top: 200px;
+            margin-left: auto;
+            margin-right: auto;
+            clear: both;
+            min-width: 400px;
+            overflow: hidden;
+        }
+        
+        #loginWindow {
+            background-color: white;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 3em;
+            padding-right: 3em;
+            padding-bottom: 3em;
+            padding-top: 2em;
+            border: solid #eee 1px;
+            border-radius: 5px;
+            box-shadow: 10px 10px 25px grey;
+            overflow: hidden;
+            width: 0;
+            height: 0;
+        }
+        
+        .input-group {
+            margin-top: 2em;
+            margin-bottom: 2em;
+            opacity: 0;
+        }
+        
+        .page-header {
+            opacity: 0;
+        }
+        
+        .left {
+            float: right;
+            font-size: 1.5em;
+        }
+        
+        .btn {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $('#loginWindow').animate({
+                    'width': '100%'
+                }, 500)
+                .delay(30)
+                .animate({
+                    'height': '375px'
+                }, 500);
+            $('.page-header, .input-group, .btn')
+                .delay(850)
+                .animate({
+                    'opacity': '100'
+                }, 7000);
+        });
+    </script>
+</head>
+
+<body>
+
+
+    <div id="wrapper">
+        <div id="loginWindow">
+            <div class="page-header">
+                <p class="left">
+                    <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                </p>
+                <h1>Login</h1>
+            </div>
+            <form action="#">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon3">Namespace</span>
+                    <select size="1" name="namespace">
+                            <option value="CognosEx">CognosEx (Example)</option>
+                            <option value="LDAP">LDAP (Example)</option>
+                        </select>
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Username</span>
+                    <input type="text" name="userid" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon2">Password</span>
+                    <input type="password" name="password" class="form-control" placeholder="Password" aria-describedby="basic-addon2">
+                </div>
+                <button class="btn btn-primary" type="button" name="Login" onclick="login();">Submit</button>
+            </form>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+</body>
+
+</html>

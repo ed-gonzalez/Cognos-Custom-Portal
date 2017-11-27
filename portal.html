@@ -1,0 +1,219 @@
+<!-- 
+Author: 
+ Ed Gonzalez  
+ edgonzalez@icdata.io
+ www.icdata.io 
+ www.linkedin.com/in/ed-gonzalez-9683696
+ 
+	Free for personal and commercial use under the CCA 3.0 license
+	I just ask for you give me credit for the code and tell your friends about it.
+
+	* Note this is not production ready code. It is a very simple implementation, and is only meant to get you started.
+ -->
+<!-- Update Line 148 to match your Cognos Server URL -->
+
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Ed Gonzalez - Custom Portal</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="flatly_bootstrap.css">
+
+    <style>
+        body {
+            margin: 25px;
+        }
+        
+        iframe {
+            border: #ffffff 1px dotted;
+        }
+        
+        #navcontainer {
+            height: 600px;
+            background-color: #2c3e50;
+            border-radius: 4px;
+        }
+        
+        #repBody {
+            height: 600px;
+        }
+        
+        hr {
+            border-top: 2px solid #8c8b8b;
+        }
+        
+        #navcontainer ul {
+            margin-left: 15px;
+            padding-left: 0;
+            list-style-type: none;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        
+        #navcontainer a {
+            display: block;
+            padding: 19px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        #navcontainer a:link,
+        #navlist a:visited {
+            color: #EEE;
+            text-decoration: none;
+        }
+        
+        #navcontainer a:hover {
+            background-color: #000000;
+            color: 18bc9c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="row">
+
+
+        <div class="col-12">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+                        <a class="navbar-brand" href="http://icdata.io">Custom Portal - Ed Gonzalez</a>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+
+                        </ul>
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li> <input id='folderId' type="text" class="form-control" placeholder="Folder ID" style='margin-top: 9px;'></li>
+                            <li><a href="#" onclick="testMe();">Search</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+
+    <hr/>
+
+    <div class="row">
+
+        <!--- Optional Nav Container -->
+        <div id="navcontainer" class="col-md-3 col-sm-3">
+            <ul id="navlist">
+                <li> <a class="navbar-brand" href="http://icdata.io">Reports</a></li>
+            </ul>
+        </div>
+
+        <!--- IFrame for Report -->
+        <div id='repBody' class="col-md-7">
+            <iframe id='f1' src="/../bi?perspective=home&ui_appbar=false&ui_navbar=false" width="100%" height="600" scrolling="no"></iframe>
+        </div>
+    </div>
+
+
+
+    <script>
+        var myData;
+
+        $("#searchBtn").click(function() {
+
+            console.log('***************************HELLO!**********************')
+
+            console.log($('#folderId').val())
+                //testMe();
+
+        });
+
+        function testMe() {
+            var test = $('#f1');
+            var allCookies = test[0].contentDocument.cookie;
+            console.log(test[0].contentDocument.cookie);
+            cookieArray = allCookies.split(';');
+            myCookie = cookieArray[0];
+            var token = myCookie.split('=')[1]
+
+            console.log(token);
+
+            $('#navlist li').remove();
+            // now create a var 'html' to store the markup we're using to output the feed to the browser window
+            var folderNm = '<li> <a id="FldrNm" href="http://icdata.io"><h3>Reports</h3></a></li>';
+            //put that feed content on the screen!
+            $('#navlist').append($(folderNm));
+
+            var lookUp = $('#folderId').val();
+
+            //*******Update with correct Cognos Server URL
+            var folder_ID = "/../bi/v1/objects/" + lookUp + "/items?nav_filter=true&fields=userInterfaces%2Cowner.id%2CdefaultName%2Cdisabled%2Chidden%2Cpermissions%2CrunInAdvancedViewer%2CcanBurst%2CuserInterfaces%2Cextensions%2CiconURI%2CdefaultScreenTip%2CsearchPath%2Cdescription";
+
+            console.log(folder_ID)
+            $.ajax({
+                url: folder_ID,
+                type: 'GET',
+                dataType: 'json',
+                headers: {
+                    'X-XSRF-TOKEN': token
+                },
+                contentType: 'application/json; charset=utf-8',
+                success: function(result) {
+                    console.log("results ******************************");
+                    console.log(result)
+                    console.log(result.data)
+                    for (i = 0; i < result.data.length; i++) {
+                        var path = result.data[i]._meta.links.path.url;
+                        path = path.split('=')[1]
+
+                        //get Folder Name out of report Path
+                        decodePath = uri_dec = decodeURIComponent(path);
+                        parent = decodePath.split('/');
+                        console.log(parent);
+                        parentNm = parent[parent.length - 2];
+                        console.log(parentNm);
+                        $("#FldrNm").html('<h3>' + parentNm + '</h3>');
+
+                        if (result.data[i].type == 'exploration') {
+                            link = "/../bi/?perspective=dashboard&pathRef=" + path + "&ui_appbar=false&ui_navbar=false&action=view&mode=dashboard"
+                        } else {
+                            link = '/../bi/?pathRef=' + path + '&ui_appbar=false&ui_navbar=false&format=HTML&prompt=true&action=run'
+                        }
+
+
+                        title = result.data[i].defaultName
+
+                        // now create a var 'html' to store the markup we're using to output the feed to the browser window
+                        var html = "<li><a href='#'    onclick=\" $('#f1').attr('src','" + link + "'); \">" + title + "</a></li>";
+                        //put that feed content on the screen!
+                        $('#navlist').append($(html));
+                    }
+
+                },
+                error: function(error) {
+
+                }
+            });
+
+
+        }
+
+        function sucess(d) {
+            console.log(d)
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
