@@ -1,7 +1,7 @@
 # Cognos-Custom-Portal
 Simple Custom Portal for Cognos analytics
 
-This is some sample code I used for my video on custom Cognos Portals, https://www.youtube.com/watch?v=ETvDNbcQC-8&t=7s for IBM Cognos Anlalytics
+This is some sample code I used for my video on custom Cognos Portals, https://www.youtube.com/watch?v=ETvDNbcQC-8&t=7s for IBM Cognos Anlalytics.  If you find the code useful or interesting, please consider giving the video a like. 
 
 This code provides a starting point for creating a custom portal to reports to deliver a small subset of Cognos reports based on a Cognos Folder ID.    
 
